@@ -26,7 +26,7 @@ export interface MatchSummary {
     }
 }
 
-export function transformMatch(matchData: any, targetPuuid: string): MatchSummary {
+export function trimMatch(matchData: any, targetPuuid: string): MatchSummary {
     const info = matchData.info
     const gameDurationMinutes = Math.round(info.gameDuration / 60)
 
@@ -84,5 +84,114 @@ export function transformMatch(matchData: any, targetPuuid: string): MatchSummar
             ourTeam: extractObjectives(ourTeamData),
             enemyTeam: extractObjectives(enemyTeamData),
         },
+    }
+}
+
+
+export interface TimelineInsight {
+    goldDiffAt10: number
+    goldDiffAt15: number
+    goldDiffAt20: number
+    csDiffAt10: number
+    csDiffAt15: number
+    deathTimings: { minute: number, killerChampion: string }[]
+    keyEvents: { minute: number, description: string }[]
+}
+
+export function trimTimeline(
+    timelineData: any,
+    targetPuuid: string,
+    matchData: any
+): TimelineInsight {
+    const frames = timelineData.info.frames
+
+    // find participant ID from puuid index
+    const puuids = timelineData.metadata.participants
+    const participantIndex = puuids.indexOf(targetPuuid)
+    const participantId = (participantIndex + 1).toString()
+
+    // find lane opponent (same role, opposite team)
+    const participants = matchData.info.participants
+    const targetParticipant = participants.find((p: any) => p.puuid === targetPuuid)
+    const targetRole = targetParticipant.teamPosition
+    const targetTeamId = targetParticipant.teamId
+
+    const laneOpponent = participants.find(
+        (p: any) => p.teamPosition === targetRole && p.teamId !== targetTeamId
+    )
+
+    const opponentIndex = laneOpponent
+        ? puuids.indexOf(laneOpponent.puuid)
+        : -1
+    const opponentId = opponentIndex >= 0 ? (opponentIndex + 1).toString() : null
+
+    // helper to get gold diff at a specific minute
+    function getGoldDiff(minute: number): number {
+        const frame = frames[minute]
+        if (!frame || !opponentId) return 0
+        const myGold = frame.participantFrames[participantId]?.totalGold || 0
+        const theirGold = frame.participantFrames[opponentId]?.totalGold || 0
+        return myGold - theirGold
+    }
+
+    // helper to get cs diff at a specific minute
+    function getCsDiff(minute: number): number {
+        const frame = frames[minute]
+        if (!frame || !opponentId) return 0
+        const myCs = frame.participantFrames[participantId]?.minionsKilled || 0
+        const theirCs = frame.participantFrames[opponentId]?.minionsKilled || 0
+        return myCs - theirCs
+    }
+
+    // extract death timings and key events
+    const deathTimings: { minute: number, killerChampion: string }[] = []
+    const keyEvents: { minute: number, description: string }[] = []
+
+    frames.forEach((frame: any, frameIndex: number) => {
+        frame.events.forEach((event: any) => {
+            const minute = Math.floor(event.timestamp / 60000)
+
+            // track player deaths
+            if (event.type === 'CHAMPION_KILL' && event.victimId?.toString() === participantId) {
+                const killer = participants.find(
+                    (p: any) => puuids.indexOf(p.puuid) + 1 === event.killerId
+                )
+                deathTimings.push({
+                    minute,
+                    killerChampion: killer?.championName || 'Unknown',
+                })
+            }
+
+            // track objective events
+            if (event.type === 'ELITE_MONSTER_KILL') {
+                const killer = participants.find(
+                    (p: any) => puuids.indexOf(p.puuid) + 1 === event.killerId
+                )
+                const isOurTeam = killer?.teamId === targetTeamId
+                keyEvents.push({
+                    minute,
+                    description: `${isOurTeam ? 'Allied' : 'Enemy'} team killed ${event.monsterType}`,
+                })
+            }
+
+            // track tower kills
+            if (event.type === 'BUILDING_KILL') {
+                const isOurTeam = event.teamId !== targetTeamId
+                keyEvents.push({
+                    minute,
+                    description: `${isOurTeam ? 'Allied' : 'Enemy'} team took a ${event.buildingType}`,
+                })
+            }
+        })
+    })
+
+    return {
+        goldDiffAt10: getGoldDiff(10),
+        goldDiffAt15: getGoldDiff(15),
+        goldDiffAt20: getGoldDiff(20),
+        csDiffAt10: getCsDiff(10),
+        csDiffAt15: getCsDiff(15),
+        deathTimings,
+        keyEvents,
     }
 }
