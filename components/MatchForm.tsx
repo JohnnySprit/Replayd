@@ -19,18 +19,24 @@ export default function MatchForm({ onSubmit }: MatchFormProps) {
     return (
         <div>
             <input
+                placeholder="Game Name"
                 value={gameName}
                 onChange={(e) => setGameName(e.target.value)}
             />
             <input
+                placeholder="Tag Line"
                 value={tagLine}
                 onChange={(e) => setTagLine(e.target.value)}
             />
+            <select value={region} onChange={(e) => setRegion(e.target.value)}>
+                <option value="NA">NA</option>
+                <option value="EUW">EUW</option>
+                <option value="EUNE">EUNE</option>
+                <option value="KR">KR</option>
+                <option value="BR">BR</option>
+            </select>
             <input
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-            />
-            <input
+                placeholder="Match ID"
                 value={matchId}
                 onChange={(e) => setMatchId(e.target.value)}
             />
