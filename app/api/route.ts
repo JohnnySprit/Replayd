@@ -18,14 +18,14 @@ export async function POST(request: NextRequest) {
         // step 1: get puuid from riot id
         const puuid = await getPuuid(gameName, tagLine)
 
-        // step 2: get match id — either user provided one or we use their most recent
+        // step 2: get match id thats either user provided one or we use their most recent
         let targetMatchId = matchId
         if (!targetMatchId) {
             const matchIds = await getRecentMatchIds(puuid)
             targetMatchId = matchIds[0]
         }
 
-        // step 3: fetch match and timeline in parallel
+        // step 3: fetch match and timeline in parallel to speed up the process
         const [matchData, timelineData] = await Promise.all([
             getMatch(targetMatchId),
             getMatchTimeline(targetMatchId),
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         const summary = trimMatch(matchData, puuid)
         const timelineInsights = trimTimeline(timelineData, puuid, matchData)
 
-        // step 5: get coaching report
+        // step 5: finally get coaching report
         const report = await getCoachingReport(summary, timelineInsights)
 
         return NextResponse.json({
