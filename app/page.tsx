@@ -1,7 +1,9 @@
+import MatchForm from '@/components/MatchForm'
+
 export default function Home() {
   return (
-    <main className="min-h-screen p-8">
-      <h1 className="text-2xl font-bold">Replayd</h1>
+    <main className="min-h-screen bg-zinc-900">
+      <MatchForm />
     </main>
   )
 }
