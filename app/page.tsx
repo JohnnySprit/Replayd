@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import MatchForm from '@/components/MatchForm'
 import Report from '@/components/Report'
 
@@ -12,6 +12,26 @@ export default function Home() {
     player: any
     report: string
   } | null>(null)
+  const [messageIndex, setMessageIndex] = useState(0)
+
+  const loadingMessages = [
+    'Analyzing your game...',
+    'Gathering data...',
+    'Processing information...',
+    'Consulting the coach...',
+    'Preparing report...',
+    'Finalizing analysis...',
+  ]
+
+  useEffect(() => {
+    if (!isLoading) return
+
+    const intervalId = setInterval(() => {
+      setMessageIndex((currentIndex) => (currentIndex + 1) % loadingMessages.length)
+    }, 2000)
+
+    return () => clearInterval(intervalId)
+  }, [isLoading])
 
   async function handleSubmit(gameName: string, tagLine: string, region: string, matchId: string) {
     setIsLoading(true)
@@ -20,7 +40,7 @@ export default function Home() {
 
     try {
       // fake delay for testing loading UI remove reminder to take this out before shipping
-      await new Promise((resolve) => setTimeout(resolve, 4000))
+      await new Promise((resolve) => setTimeout(resolve, 12000))
       setResult({
         matchId: 'NA1_TEST123',
         player: {
@@ -64,7 +84,7 @@ export default function Home() {
       {isLoading && (
         <div className="flex flex-col items-center justify-center h-screen gap-4">
           <div className="w-10 h-10 border-4 border-zinc-700 border-t-amber-500 rounded-full animate-spin" />
-          <p className="text-zinc-400">Analyzing your game...</p>
+          <p className="text-zinc-400">{loadingMessages[messageIndex]}</p>
         </div>
       )}
       {error && <p>{error}</p>}
