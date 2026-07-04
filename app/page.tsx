@@ -40,9 +40,9 @@ export default function Home() {
 
     try {
       // fake delay for testing loading UI remove reminder to take this out before shipping
-      await new Promise((resolve) => setTimeout(resolve, 12000))
+      //await new Promise((resolve) => setTimeout(resolve, 12000))
 
-      const response = await fetch('/api/analyze', {
+      const response = await fetch('/api', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ gameName, tagLine, region, matchId }),
@@ -59,14 +59,13 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-zinc-900">
-      {!result && !isLoading && <MatchForm onSubmit={handleSubmit} />}
+      {!result && <MatchForm onSubmit={handleSubmit} error={error} />}
       {isLoading && (
         <div className="flex flex-col items-center justify-center h-screen gap-4">
           <div className="w-10 h-10 border-4 border-zinc-700 border-t-amber-500 rounded-full animate-spin" />
           <p className="text-zinc-400">{loadingMessages[messageIndex]}</p>
         </div>
       )}
-      {error && <p>{error}</p>}
       {result && <Report matchId={result.matchId} player={result.player} report={result.report} />}
     </main>
   )

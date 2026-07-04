@@ -6,9 +6,10 @@ const inputStyles = "w-full max-w-md p-2 border border-amber-300 rounded-md text
 
 interface MatchFormProps {
     onSubmit: (gameName: string, tagLine: string, region: string, matchId: string) => void
+    error: string | null
 }
 
-export default function MatchForm({ onSubmit }: MatchFormProps) {
+export default function MatchForm({ onSubmit, error }: MatchFormProps) {
     const [gameName, setGameName] = useState('')
     const [tagLine, setTagLine] = useState('')
     const [region, setRegion] = useState('NA')
@@ -53,7 +54,9 @@ export default function MatchForm({ onSubmit }: MatchFormProps) {
                 value={matchId}
                 onChange={(e) => setMatchId(e.target.value)}
             />
-            <p className="text-red-500">{validationError}</p>
+            {(validationError || error) && (
+                <p className="text-red-500 text-center">{validationError || error}</p>
+            )}
             <button type="button" onClick={handleSubmit}
                 className="w-full max-w-md p-2 text-white rounded-md bg-zinc-800 hover:bg-zinc-700"
             >
