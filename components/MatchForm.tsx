@@ -13,8 +13,14 @@ export default function MatchForm({ onSubmit }: MatchFormProps) {
     const [tagLine, setTagLine] = useState('')
     const [region, setRegion] = useState('NA')
     const [matchId, setMatchId] = useState('')
+    const [validationError, setValidationError] = useState<string | null>(null)
 
     function handleSubmit() {
+        if (!gameName || !tagLine || !region) {
+            setValidationError('Please fill in all required fields')
+            return
+        }
+        setValidationError(null)
         onSubmit(gameName, tagLine, region, matchId)
     }
 
@@ -47,11 +53,12 @@ export default function MatchForm({ onSubmit }: MatchFormProps) {
                 value={matchId}
                 onChange={(e) => setMatchId(e.target.value)}
             />
+            <p className="text-red-500">{validationError}</p>
             <button type="button" onClick={handleSubmit}
-            className="w-full max-w-md p-2 text-white rounded-md bg-zinc-800 hover:bg-zinc-700"
+                className="w-full max-w-md p-2 text-white rounded-md bg-zinc-800 hover:bg-zinc-700"
             >
-            Submit
-        </button>
+                Submit
+            </button>
         </div>
     )
 }

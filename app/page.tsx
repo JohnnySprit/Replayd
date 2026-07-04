@@ -41,27 +41,7 @@ export default function Home() {
     try {
       // fake delay for testing loading UI remove reminder to take this out before shipping
       await new Promise((resolve) => setTimeout(resolve, 12000))
-      setResult({
-        matchId: 'NA1_TEST123',
-        player: {
-          summonerName: 'testuser',
-          champion: 'Ashe',
-          role: 'BOTTOM',
-          kills: 4,
-          deaths: 9,
-          assists: 9,
-          cs: 313,
-          goldEarned: 17400,
-          damageToChampions: 23119,
-          visionScore: 25,
-          wardsPlaced: 14,
-          win: false,
-          items: [3033, 2523, 3046, 3031, 3156, 1043],
-        },
-        report: '### Overall Performance\n\nThis is placeholder text to test styling and layout without calling the real API.',
-      })
 
-      /* actual API call restore this when done
       const response = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -70,7 +50,6 @@ export default function Home() {
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Something went wrong')
       setResult(data)
-      */
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An unknown error occurred')
     } finally {
