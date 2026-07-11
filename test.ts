@@ -22,20 +22,9 @@ async function test() {
         console.log('match fetched:', matchData.metadata.matchId)
 
         console.log('4. Transforming match...')
-        const summary = trimMatch(matchData, puuid)
-        console.log('summary built for:', summary.targetPlayer.summonerName)
+        const summary = await trimMatch(matchData, puuid)
+        console.log('summary built for:', summary.targetPlayer)
 
-        console.log('5. Getting timeline...')
-        const timeline = await getMatchTimeline(matchIds[0])
-        console.log('timeline frames:', timeline.info.frames.length)
-
-        console.log('6. Transforming timeline...')
-        const timelineInsights = trimTimeline(timeline, puuid, matchData)
-        console.log('timeline insights:', JSON.stringify(timelineInsights, null, 2))
-
-        console.log('7. Getting coaching report...')
-        const report = await getCoachingReport(summary, timelineInsights)
-        console.log('\nCOACHING REPORT:\n', report)
 
     } catch (err) {
         console.error('Error:', err)

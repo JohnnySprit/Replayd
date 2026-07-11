@@ -31,6 +31,7 @@ function buildCoachingPrompt(summary: any, timeline: any): string {
         .map((e: any) => `minute ${e.minute}: ${e.description}`)
         .join('\n')
 
+
     return `You are an expert League of Legends coach reviewing a ranked game. Be honest, specific, and actionable. Focus on decisions and patterns, not just stats.
 
 GAME SUMMARY
@@ -47,8 +48,10 @@ KDA: ${p.kills}/${p.deaths}/${p.assists}
 CS: ${p.cs} (${(p.cs / summary.gameDurationMinutes).toFixed(1)} per minute)
 Gold Earned: ${p.goldEarned}
 Damage to Champions: ${p.damageToChampions}
+Items: ${p.items.map((item: { id: number, name: string }) => `${item.id}: ${item.name}`).join(', ')}
 Vision Score: ${p.visionScore}
 Wards Placed: ${p.wardsPlaced}
+Role Quest Bonus Item: ${p.roleQuestItem ? p.roleQuestItem.name : 'None'}
 
 LANE PERFORMANCE
 Gold vs lane opponent at 10 min: ${timeline.goldDiffAt10 > 0 ? '+' : ''}${timeline.goldDiffAt10}

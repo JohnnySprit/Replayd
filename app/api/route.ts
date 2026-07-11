@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
         ])
 
         // step 4: transform both
-        const summary = trimMatch(matchData, puuid)
+        const summary = await trimMatch(matchData, puuid)
         const timelineInsights = trimTimeline(timelineData, puuid, matchData)
 
         // step 5: finally get coaching report

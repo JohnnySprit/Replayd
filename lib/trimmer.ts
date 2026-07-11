@@ -1,3 +1,6 @@
+import { getItemNames, toDataDragonVersion } from "./datadragon"
+
+
 export interface PlayerSummary {
     summonerName: string
     champion: string
@@ -11,7 +14,8 @@ export interface PlayerSummary {
     visionScore: number
     wardsPlaced: number
     win: boolean
-    items: number[]
+    items: { id: number, name: string }[]
+    roleQuestItem: { id: number, name: string } | null
 }
 
 export interface MatchSummary {
@@ -26,7 +30,9 @@ export interface MatchSummary {
     }
 }
 
-export function trimMatch(matchData: any, targetPuuid: string): MatchSummary {
+export async function trimMatch(matchData: any, targetPuuid: string): Promise<MatchSummary> {
+    const ddVersion = toDataDragonVersion(matchData.info.gameVersion)
+    const itemNames = await getItemNames(ddVersion)
     const info = matchData.info
     const gameDurationMinutes = Math.round(info.gameDuration / 60)
 
@@ -55,7 +61,14 @@ export function trimMatch(matchData: any, targetPuuid: string): MatchSummary {
         visionScore: p.visionScore,
         wardsPlaced: p.wardsPlaced,
         win: p.win,
-        items: [p.item0, p.item1, p.item2, p.item3, p.item4, p.item5],
+        items: [p.item0, p.item1, p.item2, p.item3, p.item4, p.item5, p.item6].map((itemId: number) => {
+            if (itemId === 0) {
+                return { id: 0, name: 'Empty' }
+            }
+            const name = itemNames[itemId.toString()]
+            return { id: itemId, name: name || 'Unknown Item' }
+        }),
+        roleQuestItem: p.roleBoundItem ? { id: p.roleBoundItem, name: itemNames[p.roleBoundItem.toString()] || 'Unknown Item' } : null
     }))
 
     const targetPlayer = allPlayers.find(
