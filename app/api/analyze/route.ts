@@ -16,19 +16,19 @@ export async function POST(request: NextRequest) {
         }
 
         // step 1: get puuid from riot id
-        const puuid = await getPuuid(gameName, tagLine)
+        const puuid = await getPuuid(gameName, tagLine, region)
 
         // step 2: get match id thats either user provided one or we use their most recent
         let targetMatchId = matchId
         if (!targetMatchId) {
-            const matchIds = await getRecentMatchIds(puuid)
+            const matchIds = await getRecentMatchIds(puuid, region)
             targetMatchId = matchIds[0]
         }
 
         // step 3: fetch match and timeline in parallel to speed up the process
         const [matchData, timelineData] = await Promise.all([
-            getMatch(targetMatchId),
-            getMatchTimeline(targetMatchId),
+            getMatch(targetMatchId, region),
+            getMatchTimeline(targetMatchId, region),
         ])
 
         // step 4: transform both

@@ -10,21 +10,20 @@ async function test() {
         const { getCoachingReport } = await import('./lib/openai')
 
         console.log('1. Getting puuid...')
-        const puuid = await getPuuid('Cluimdid', 'NA1')
+        const puuid = await getPuuid('Cluimdid', 'NA1', 'NA')
         console.log('puuid:', puuid)
 
         console.log('2. Getting recent matches...')
-        const matchIds = await getRecentMatchIds(puuid)
+        const matchIds = await getRecentMatchIds(puuid, 'NA')
         console.log('matchIds:', matchIds)
 
         console.log('3. Getting match data...')
-        const matchData = await getMatch(matchIds[0])
+        const matchData = await getMatch(matchIds[0], 'NA')
         console.log('match fetched:', matchData.metadata.matchId)
 
         console.log('4. Transforming match...')
         const summary = await trimMatch(matchData, puuid)
         console.log('summary built for:', summary.targetPlayer)
-
 
     } catch (err) {
         console.error('Error:', err)

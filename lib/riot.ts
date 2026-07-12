@@ -1,10 +1,28 @@
-const RIOT_API_KEY = process.env.RIOT_API_KEY
-const REGIONAL_BASE = 'https://americas.api.riotgames.com'
-const PLATFORM_BASE = 'https://na1.api.riotgames.com'
+const matchCache = new Map<string, any>()
 
-export async function getPuuid(gameName: string, tagLine: string): Promise<string> {
+const REGIONAL_ROUTING: Record<string, string> = {
+    NA: 'americas',
+    BR: 'americas',
+    LAN: 'americas',
+    LAS: 'americas',
+    EUW: 'europe',
+    EUNE: 'europe',
+    TR: 'europe',
+    RU: 'europe',
+    KR: 'asia',
+    JP: 'asia',
+}
+
+function getRegionalBase(region: string): string {
+    const routing = REGIONAL_ROUTING[region.toUpperCase()]
+    if (!routing) throw new Error(`Unknown region: ${region}`)
+    return `https://${routing}.api.riotgames.com`
+}
+
+export async function getPuuid(gameName: string, tagLine: string, region: string): Promise<string> {
+    const regionBase = getRegionalBase(region)
     const res = await fetch(
-        `${REGIONAL_BASE}/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}?api_key=${process.env.RIOT_API_KEY}`
+        `${regionBase}/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}?api_key=${process.env.RIOT_API_KEY}`
     )
 
     if (res.status === 404) {
@@ -18,9 +36,10 @@ export async function getPuuid(gameName: string, tagLine: string): Promise<strin
     return data.puuid
 }
 
-export async function getRecentMatchIds(puuid: string, count = 5): Promise<string[]> {
+export async function getRecentMatchIds(puuid: string, region: string, count = 5): Promise<string[]> {
+    const regionBase = getRegionalBase(region)
     const res = await fetch(
-        `${REGIONAL_BASE}/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=${count}&api_key=${process.env.RIOT_API_KEY}`
+        `${regionBase}/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=${count}&api_key=${process.env.RIOT_API_KEY}`
     )
 
     if (!res.ok) throw new Error(`Riot API error: ${res.status}`)
@@ -34,19 +53,26 @@ export async function getRecentMatchIds(puuid: string, count = 5): Promise<strin
     return matchIds
 }
 
-export async function getMatch(matchId: string): Promise<any> {
-    const res = await fetch(
-        `${REGIONAL_BASE}/lol/match/v5/matches/${matchId}?api_key=${process.env.RIOT_API_KEY}`
-    )
-    if (res.status === 404) {
-        throw new Error(`No match found with ID ${matchId}.`)
+export async function getMatch(matchId: string, region: string): Promise<any> {
+    const regionBase = getRegionalBase(region)
+    if (matchCache.has(matchId)) {
+        return matchCache.get(matchId)
     }
+
+    const res = await fetch(
+        `${regionBase}/lol/match/v5/matches/${matchId}?api_key=${process.env.RIOT_API_KEY}`
+    )
+    if (res.status === 404) throw new Error(`No match found with ID ${matchId}.`)
     if (!res.ok) throw new Error(`Riot API error: ${res.status}`)
-    return res.json()
+
+    const data = await res.json()
+    matchCache.set(matchId, data)
+    return data
 }
 
-export async function getMatchTimeline(matchId: string): Promise<any> {
-    const url = `${REGIONAL_BASE}/lol/match/v5/matches/${matchId}/timeline?api_key=${process.env.RIOT_API_KEY}`
+export async function getMatchTimeline(matchId: string, region: string): Promise<any> {
+    const regionBase = getRegionalBase(region)
+    const url = `${regionBase}/lol/match/v5/matches/${matchId}/timeline?api_key=${process.env.RIOT_API_KEY}`
     const res = await fetch(url)
     if (res.status === 404) {
         throw new Error(`No timeline found for match ID ${matchId}.`)

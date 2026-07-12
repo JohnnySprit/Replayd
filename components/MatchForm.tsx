@@ -5,7 +5,7 @@ import { useState } from 'react'
 const inputStyles = "w-full max-w-md p-2 border border-amber-300 rounded-md text-zinc-400 placeholder:text-zinc-400"
 
 interface MatchFormProps {
-    onSubmit: (gameName: string, tagLine: string, region: string, matchId: string) => void
+    onSubmit: (gameName: string, tagLine: string, region: string) => void
     error: string | null
 }
 
@@ -13,7 +13,6 @@ export default function MatchForm({ onSubmit, error }: MatchFormProps) {
     const [gameName, setGameName] = useState('')
     const [tagLine, setTagLine] = useState('')
     const [region, setRegion] = useState('NA')
-    const [matchId, setMatchId] = useState('')
     const [validationError, setValidationError] = useState<string | null>(null)
 
     function handleSubmit() {
@@ -22,7 +21,7 @@ export default function MatchForm({ onSubmit, error }: MatchFormProps) {
             return
         }
         setValidationError(null)
-        onSubmit(gameName, tagLine, region, matchId)
+        onSubmit(gameName, tagLine, region)
     }
 
     return (
@@ -48,12 +47,6 @@ export default function MatchForm({ onSubmit, error }: MatchFormProps) {
                 <option value="KR">KR</option>
                 <option value="BR">BR</option>
             </select>
-            <input
-                className={inputStyles}
-                placeholder="Match ID"
-                value={matchId}
-                onChange={(e) => setMatchId(e.target.value)}
-            />
             {(validationError || error) && (
                 <p className="text-red-500 text-center">{validationError || error}</p>
             )}

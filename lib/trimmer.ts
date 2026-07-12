@@ -30,6 +30,27 @@ export interface MatchSummary {
     }
 }
 
+export interface MatchPreview {
+    matchId: string
+    champion: string
+    win: boolean
+    kills: number
+    deaths: number
+    assists: number
+}
+
+export function trimMatchPreview(matchData: any, targetPuuid: string): MatchPreview {
+    const p = matchData.info.participants.find((p: any) => p.puuid === targetPuuid)
+    return {
+        matchId: matchData.metadata.matchId,
+        champion: p.championName,
+        win: p.win,
+        kills: p.kills,
+        deaths: p.deaths,
+        assists: p.assists,
+    }
+}
+
 export async function trimMatch(matchData: any, targetPuuid: string): Promise<MatchSummary> {
     const ddVersion = toDataDragonVersion(matchData.info.gameVersion)
     const itemNames = await getItemNames(ddVersion)
