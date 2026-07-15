@@ -5,6 +5,7 @@ import MatchForm from '@/components/MatchForm'
 import Report from '@/components/Report'
 import MatchList from '@/components/MatchList'
 import { MatchPreview } from '@/lib/trimmer'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -89,13 +90,13 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-900">
+    <main className="min-h-screen bg-[var(--bg-page)]">
       {!result && !isLoading && !matchPreviews && <MatchForm onSubmit={handleGetMatches} error={error} />}
       {!result && !isLoading && matchPreviews && <MatchList matchPreviews={matchPreviews} onSelect={handleSelectMatch} />}
       {isLoading && (
-        <div className="flex flex-col items-center justify-center h-screen gap-4">
-          <div className="w-10 h-10 border-4 border-zinc-700 border-t-amber-500 rounded-full animate-spin" />
-          <p className="text-zinc-400">{loadingMessages[messageIndex]}</p>
+        <div className="flex flex-col items-center justify-center h-screen gap-4 bg-[var(--bg-page)]">
+          <div className="w-10 h-10 border-4 border-zinc-700 border-t-amber-500 rounded-full animate-spin bg-[var(--bg-page)]" />
+          <p className="text-zinc-400 bg-[var(--bg-page)]">{loadingMessages[messageIndex]}</p>
         </div>
       )}
       {result && <Report matchId={result.matchId} player={result.player} report={result.report} />}

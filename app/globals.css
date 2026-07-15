@@ -1,1 +1,14 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+    --bg-page: #f5f5f7;
+}
+
+.dark {
+    --bg-page: #18181b;
+}
+
+body {
+    font-family: "Times New Roman", Times, serif;
+}
