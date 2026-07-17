@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import HeroBackground from '@/components/ui/HeroBackground'
+import { motion } from 'motion/react'
 
 const inputStyles = "w-full px-4 py-2.5 border border-[var(--border)] rounded-sm text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] bg-[var(--bg-page)] focus:outline-none focus:border-[var(--accent)] transition-colors"
 
@@ -62,11 +63,18 @@ export default function MatchForm({ onSubmit, error }: MatchFormProps) {
                 {(validationError || error) && (
                     <p className="text-red-500 text-sm text-center">{validationError || error}</p>
                 )}
-                <button type="button" onClick={handleSubmit}
-                    className="w-full mt-2 px-4 py-2.5 rounded-full bg-[var(--text-primary)] text-[var(--bg-page)] text-sm font-medium hover:opacity-90 transition-opacity"
+                <motion.button
+                    className="w-full mt-2 px-4 py-2.5 rounded-full bg-[var(--text-primary)] text-[var(--bg-page)] text-sm font-medium hover:opacity-80 transition-opacity"
+                    whileTap={{ scale: 0.95 }}
+                    type="button" onClick={handleSubmit}
+                    whileHover={{
+                        scale: 1.05,
+                        transition: { duration: 0.25 }
+                    }}
+                    transition={{ duration: 0.25 }}
                 >
                     Find Matches
-                </button>
+                </motion.button>
             </div>
         </HeroBackground>
     )

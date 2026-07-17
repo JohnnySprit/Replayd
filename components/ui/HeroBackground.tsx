@@ -8,16 +8,16 @@ export default function HeroBackground({ children }: { children: React.ReactNode
     return (
         <div className="relative min-h-screen overflow-hidden bg-[linear-gradient(180deg,#0c2417_0%,#16402a_60%,#1f5636_100%)]">
             <motion.div
-                className="absolute -top-[20%] -left-[20%] w-[70vmax] h-[70vmax] rounded-full pointer-events-none"
-                style={{ background: 'radial-gradient(circle, rgba(134,239,172,0.3), transparent 65%)' }}
+                className="absolute -top-[20%] -left-[20%] w-[120vmax] h-[120vmax] rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(ellipse, rgba(134,239,172,0.3), transparent 65%)' }}
                 animate={reduceMotion ? undefined : { x: ['0%', '45%'], y: ['0%', '25%'], scale: [1, 1.2] }}
-                transition={{ duration: 9, ease: 'easeInOut', repeat: Infinity, repeatType: 'mirror' }}
+                transition={{ duration: 14, ease: 'easeInOut', repeat: Infinity, repeatType: 'mirror' }}
             />
             <motion.div
-                className="absolute -bottom-[30%] -right-[20%] w-[60vmax] h-[60vmax] rounded-full pointer-events-none"
-                style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.18), transparent 65%)' }}
+                className="absolute -bottom-[30%] -right-[20%] w-[90vmax] h-[90vmax] rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(ellipse, rgba(52,211,153,0.18), transparent 65%)' }}
                 animate={reduceMotion ? undefined : { x: ['0%', '-35%'], y: ['0%', '-20%'], scale: [1.15, 1] }}
-                transition={{ duration: 13, ease: 'easeInOut', repeat: Infinity, repeatType: 'mirror' }}
+                transition={{ duration: 19, ease: 'easeInOut', repeat: Infinity, repeatType: 'mirror' }}
             />
             {/* fluted-glass look */}
             <div

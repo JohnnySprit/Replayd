@@ -25,7 +25,7 @@ export default function RootLayout({
     >
       <body className={`${inter.variable} ${spaceGrotesk.variable} min-h-full flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="system">
-          <div className="fixed top-4 right-4 z-50">
+          <div className="fixed top-4 right-4 z-50"> {/* maybe remove this in the future or find a better way to keep it with the hero background */}
             <ThemeToggle />
           </div>
           {children}
