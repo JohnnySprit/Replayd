@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import { Inter, Space_Grotesk } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-body" });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" });
 
 export const metadata: Metadata = {
   title: "Replayd",
@@ -19,7 +23,7 @@ export default function RootLayout({
       className="h-full antialiased"
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <body className={`${inter.variable} ${spaceGrotesk.variable} min-h-full flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="system">
           <div className="fixed top-4 right-4 z-50">
             <ThemeToggle />

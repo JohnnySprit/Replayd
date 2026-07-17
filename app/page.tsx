@@ -95,8 +95,8 @@ export default function Home() {
       {!result && !isLoading && matchPreviews && <MatchList matchPreviews={matchPreviews} onSelect={handleSelectMatch} />}
       {isLoading && (
         <div className="flex flex-col items-center justify-center h-screen gap-4 bg-[var(--bg-page)]">
-          <div className="w-10 h-10 border-4 border-zinc-700 border-t-amber-500 rounded-full animate-spin bg-[var(--bg-page)]" />
-          <p className="text-zinc-400 bg-[var(--bg-page)]">{loadingMessages[messageIndex]}</p>
+          <div className="w-10 h-10 border-4 border-[var(--border)] border-t-[var(--accent)] rounded-full animate-spin bg-[var(--bg-page)]" />
+          <p className="text-[var(--text-muted)] bg-[var(--bg-page)]">{loadingMessages[messageIndex]}</p>
         </div>
       )}
       {result && <Report matchId={result.matchId} player={result.player} report={result.report} />}
