@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const matchCache = new Map<string, any>()
 
 const REGIONAL_ROUTING: Record<string, string> = {
