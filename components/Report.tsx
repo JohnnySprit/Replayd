@@ -6,11 +6,15 @@ interface ReportProps {
     matchId: string
     player: PlayerSummary
     report: string
+    onBack: () => void
 }
 
-export default function Report({ matchId, player, report }: ReportProps) {
+export default function Report({ matchId, player, report, onBack }: ReportProps) {
     return (
         <div className="max-w-2xl mx-auto px-4 py-16 flex flex-col gap-6">
+            <button type="button" onClick={onBack} className="text-left text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] mb-4">
+                ← Back
+            </button>
             <div className="flex flex-col gap-1">
                 <p className="text-xs text-[var(--text-muted)]">Report · {matchId}</p>
                 <h1 className="text-2xl font-medium tracking-tight text-[var(--text-primary)]">

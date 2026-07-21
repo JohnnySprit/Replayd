@@ -24,6 +24,14 @@ export default function Home() {
   } | null>(null)
   const [messageIndex, setMessageIndex] = useState(0)
 
+  function handleBackToForm() {
+    setMatchPreviews(null)
+  }
+
+  function handleBackToList() {
+    setResult(null)
+  }
+
   const loadingMessages = [
     'Analyzing your game...',
     'Gathering data...',
@@ -93,14 +101,14 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[var(--bg-page)]">
       {!result && !isLoading && !matchPreviews && <MatchForm onSubmit={handleGetMatches} error={error} />}
-      {!result && !isLoading && matchPreviews && <MatchList matchPreviews={matchPreviews} onSelect={handleSelectMatch} />}
+      {!result && !isLoading && matchPreviews && <MatchList matchPreviews={matchPreviews} onSelect={handleSelectMatch} onBack={handleBackToForm} />}
       {isLoading && (
         <div className="flex flex-col items-center justify-center h-screen gap-4 bg-[var(--bg-page)]">
           <div className="w-10 h-10 border-4 border-[var(--border)] border-t-[var(--accent)] rounded-full animate-spin bg-[var(--bg-page)]" />
           <p className="text-[var(--text-muted)] bg-[var(--bg-page)]">{loadingMessages[messageIndex]}</p>
         </div>
       )}
-      {result && <Report matchId={result.matchId} player={result.player} report={result.report} />}
+      {result && <Report matchId={result.matchId} player={result.player} report={result.report} onBack={handleBackToList} />}
     </main>
   )
 }
