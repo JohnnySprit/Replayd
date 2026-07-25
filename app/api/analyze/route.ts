@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Prisma } from '@prisma/client'
 import { getPuuid, getRecentMatchIds, getMatch, getMatchTimeline } from '@/lib/riot'
 import { trimMatch, trimTimeline } from '@/lib/trimmer'
 import { getCoachingReport } from '@/lib/openai'
@@ -61,7 +60,7 @@ export async function POST(request: NextRequest) {
             data: {
                 matchId: targetMatchId,
                 gameName: gameName,
-                player: summary.targetPlayer as unknown as Prisma.InputJsonValue,
+                player: JSON.parse(JSON.stringify(summary.targetPlayer)),
                 report: report,
             },
         })
