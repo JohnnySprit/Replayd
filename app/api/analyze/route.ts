@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Prisma } from '@prisma/client'
 import { getPuuid, getRecentMatchIds, getMatch, getMatchTimeline } from '@/lib/riot'
 import { trimMatch, trimTimeline } from '@/lib/trimmer'
 import { getCoachingReport } from '@/lib/openai'
+import { db } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json()
         const { gameName, tagLine, region, matchId } = body
+
 
         if (!gameName || !tagLine) {
             return NextResponse.json(
@@ -25,6 +28,21 @@ export async function POST(request: NextRequest) {
             targetMatchId = matchIds[0]
         }
 
+        const existingMatch = await db.report.findUnique({
+            where: {
+                matchId: targetMatchId,
+            },
+        })
+
+        if (existingMatch) {
+            return NextResponse.json({
+                success: true,
+                matchId: targetMatchId,
+                player: existingMatch.player,
+                report: existingMatch.report,
+            })
+        }
+
         // step 3: fetch match and timeline in parallel to speed up the process
         const [matchData, timelineData] = await Promise.all([
             getMatch(targetMatchId, region),
@@ -37,6 +55,16 @@ export async function POST(request: NextRequest) {
 
         // step 5: finally get coaching report
         const report = await getCoachingReport(summary, timelineInsights)
+
+        // step 6: save the match and report to the database
+        await db.report.create({
+            data: {
+                matchId: targetMatchId,
+                gameName: gameName,
+                player: summary.targetPlayer as unknown as Prisma.InputJsonValue,
+                report: report,
+            },
+        })
 
         return NextResponse.json({
             success: true,

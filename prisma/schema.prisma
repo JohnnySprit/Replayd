@@ -16,3 +16,11 @@ model TestPing {
   message   String
   createdAt DateTime @default(now())
 }
+
+model Report {
+  matchId   String  @id
+  gameName  String
+  player    Json
+  report    String
+  createdAt DateTime @default(now())
+}

@@ -6,9 +6,10 @@ interface MatchListProps {
     matchPreviews: MatchPreview[]
     onSelect: (matchId: string) => void
     onBack: () => void
+    error?: string | null
 }
 
-export default function MatchList({ matchPreviews, onSelect, onBack }: MatchListProps) {
+export default function MatchList({ matchPreviews, onSelect, onBack, error }: MatchListProps) {
     return (
         <div className="max-w-2xl mx-auto px-4 py-16">
             <button type="button" onClick={onBack} className="text-left text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] mb-4">
@@ -18,6 +19,9 @@ export default function MatchList({ matchPreviews, onSelect, onBack }: MatchList
                 <h1 className="text-3xl font-medium tracking-tight text-[var(--text-primary)]">Recent Matches</h1>
                 <p className="text-sm text-[var(--text-muted)]">Pick a recent game to generate your coaching report</p>
             </div>
+            {error && (
+                <p className="mb-4 text-center text-sm text-red-500">{error}</p>
+            )}
             <div className="flex flex-col gap-3">
                 {matchPreviews.map((match) => (
                     <div
