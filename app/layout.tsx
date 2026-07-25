@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-body" });
@@ -30,6 +31,7 @@ export default function RootLayout({
           </div>
           {children}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );

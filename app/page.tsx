@@ -8,6 +8,7 @@ import MatchList from '@/components/MatchList'
 import { MatchPreview } from '@/lib/trimmer'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
+
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
