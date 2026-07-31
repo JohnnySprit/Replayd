@@ -60,7 +60,6 @@ export default function Home() {
     setResult(null)
 
     try {
-      // fake delay for testing loading UI remove reminder to take this out before shipping
       //await new Promise((resolve) => setTimeout(resolve, 12000))
 
       const response = await fetch('/api/analyze', {
@@ -73,6 +72,20 @@ export default function Home() {
       setResult(data)
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An unknown error occurred')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  async function handleSelectSample(matchId: string) {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const response = await fetch('/api/samples/' + matchId)
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Something went wrong')
+      setResult(data)
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Unknown error')
     } finally {
       setIsLoading(false)
     }
@@ -101,7 +114,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[var(--bg-page)]">
-      {!result && !isLoading && !matchPreviews && <MatchForm onSubmit={handleGetMatches} error={error} />}
+
+      {!result && !isLoading && !matchPreviews && <MatchForm onSubmit={handleGetMatches} onSelectSample={handleSelectSample} error={error} />}
       {!result && !isLoading && matchPreviews && <MatchList matchPreviews={matchPreviews} onSelect={handleSelectMatch} onBack={handleBackToForm} error={error} />}
       {isLoading && (
         <div className="flex flex-col items-center justify-center h-screen gap-4 bg-[var(--bg-page)]">

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import HeroBackground from '@/components/ui/HeroBackground'
 import { motion } from 'motion/react'
 
@@ -8,13 +8,15 @@ const inputStyles = "w-full px-4 py-2.5 border border-[var(--border)] rounded-sm
 
 interface MatchFormProps {
     onSubmit: (gameName: string, tagLine: string, region: string) => void
+    onSelectSample: (matchId: string) => void
     error: string | null
 }
 
-export default function MatchForm({ onSubmit, error }: MatchFormProps) {
+export default function MatchForm({ onSubmit, onSelectSample, error }: MatchFormProps) {
     const [gameName, setGameName] = useState('')
     const [tagLine, setTagLine] = useState('')
     const [region, setRegion] = useState('NA')
+    const [samples, setSamples] = useState<any[]>([])
     const [validationError, setValidationError] = useState<string | null>(null)
 
     function handleSubmit() {
@@ -26,9 +28,18 @@ export default function MatchForm({ onSubmit, error }: MatchFormProps) {
         onSubmit(gameName, tagLine, region)
     }
 
+    useEffect(() => {
+        const fetchSamples = async () => {
+            const response = await fetch('/api/samples');
+            const data = await response.json();
+            setSamples(data.samples ?? [])
+        }
+        fetchSamples();
+    }, []);
+
     return (
         <HeroBackground>
-            <div className="flex flex-col items-center gap-3 mb-10 text-center">
+            <div className="flex flex-col items-center gap-3 mb-2 text-center">
                 <span className="inline-flex items-center gap-2 px-3 py-1 border border-white/20 rounded-full bg-white/10 text-xs text-white/80">
                     <span className="w-2.5 h-2.5 bg-[var(--accent-bright)] rounded-sm" />
                     AI Match Analysis
@@ -37,6 +48,38 @@ export default function MatchForm({ onSubmit, error }: MatchFormProps) {
                 <p className="text-sm text-white/70 max-w-sm">
                     AI Coaching for ranked League of Legends games
                 </p>
+            </div>
+            <h1 className="text-lg font-medium text-white/90">Cached Matches</h1>
+            <div className="w-full max-w-md flex flex-col gap-1 max-h-[280px] mb-1 overflow-y-auto">
+                {samples.map((sample) => (
+                        <div
+                            key={sample.matchId}
+                            className="flex items-center justify-between gap-4 p-4 rounded-md bg-[var(--bg-card)] border border-[var(--border)] shadow-md"
+                            >
+                            <div className="flex flex-col gap-1.5">
+                                <div className="flex items-center gap-3">
+                                    <h2 className="text-base font-medium text-[var(--text-primary)]">{sample.player.summonerName} : {sample.player.champion}</h2>
+                                    <span
+                                        className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${sample.player.win
+                                                ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+                                                : 'bg-red-500/10 text-red-600 dark:text-red-400'
+                                            }`}
+                                    >
+                                        {sample.player.win ? 'Win' : 'Loss'}
+                                    </span>
+                                </div>
+                                <p className="text-sm text-[var(--text-muted)]">
+                                    {sample.player.kills} / {sample.player.deaths} / {sample.player.assists} KDA
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => onSelectSample(sample.matchId)}
+                                className="shrink-0 px-5 py-2 rounded-full bg-[var(--text-primary)] text-[var(--bg-page)] text-sm font-medium hover:opacity-85 transition-opacity"
+                            >
+                                Analyze
+                            </button>
+                        </div>
+                    ))}
             </div>
             <div className="w-full max-w-md flex flex-col gap-3 p-8 rounded-md bg-[var(--bg-card)] border border-[var(--border)] shadow-md">
                 <input

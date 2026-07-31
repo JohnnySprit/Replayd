@@ -1,0 +1,5 @@
+export const SAMPLE_MATCH_IDS = [
+    'NA1_5611953162',
+    'KR_8319375394',
+    'EUW1_7934564051'
+]

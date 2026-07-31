@@ -23,4 +23,5 @@ model Report {
   player    Json
   report    String
   createdAt DateTime @default(now())
+
 }

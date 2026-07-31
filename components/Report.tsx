@@ -9,7 +9,7 @@ interface ReportProps {
     onBack: () => void
 }
 
-export default function Report({ matchId, player, report, onBack }: ReportProps) {
+export default function Report({ matchId, player, report, onBack}: ReportProps) {
     return (
         <div className="max-w-2xl mx-auto px-4 py-16 flex flex-col gap-6">
             <button type="button" onClick={onBack} className="text-left text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] mb-4">
