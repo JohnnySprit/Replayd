@@ -1,8 +1,8 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { SAMPLE_MATCH_IDS } from '@/lib/samples';
+import { SAMPLE_MATCH_IDS, SAMPLE_MATCHES } from '@/lib/samples';
 import { db } from '@/lib/db';
 
-export async function GET(  request: Request, context: { params: Promise<{ matchId: string }> }) {
+export async function GET(request: Request, context: { params: Promise<{ matchId: string }> }) {
     try {
         const { matchId } = await context.params
 
@@ -10,7 +10,15 @@ export async function GET(  request: Request, context: { params: Promise<{ match
             return NextResponse.json({ error: 'Not a sample' }, { status: 404 })
         }
 
-        const report = await db.report.findUnique({ where: { matchId } })
+        const puuid = SAMPLE_MATCHES[matchId]
+        if (!puuid) {
+            return NextResponse.json({ error: 'Not a sample' }, { status: 404 })
+        }
+
+        const report = await db.report.findUnique({
+            where: { matchId_puuid: { matchId, puuid } },
+        })
+
         if (!report) return NextResponse.json({ error: 'Not found' }, { status: 404 })
         return NextResponse.json({
             success: true,

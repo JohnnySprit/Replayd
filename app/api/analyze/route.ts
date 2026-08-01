@@ -29,8 +29,10 @@ export async function POST(request: NextRequest) {
 
         const existingMatch = await db.report.findUnique({
             where: {
-                matchId: targetMatchId,
-                puuid,
+                matchId_puuid: {
+                    matchId: targetMatchId,
+                    puuid,
+                },
             },
         })
 
