@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
         const existingMatch = await db.report.findUnique({
             where: {
                 matchId: targetMatchId,
+                gameName: gameName,
             },
         })
 

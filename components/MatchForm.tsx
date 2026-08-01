@@ -39,9 +39,12 @@ export default function MatchForm({ onSubmit, onSelectSample, error }: MatchForm
 
     return (
         <HeroBackground>
-            <div className="flex flex-col items-center gap-3 mb-2 text-center">
+            <div className="flex flex-col items-center gap-3 mb-8 text-center">
                 <span className="inline-flex items-center gap-2 px-3 py-1 border border-white/20 rounded-full bg-white/10 text-xs text-white/80">
-                    <span className="w-2.5 h-2.5 bg-[var(--accent-bright)] rounded-sm" />
+                    <span className="relative flex w-2.5 h-2.5">
+                        <span className="absolute inset-0 rounded-sm bg-[var(--accent-bright)] animate-ping opacity-60" />
+                        <span className="relative w-2.5 h-2.5 rounded-sm bg-[var(--accent-bright)]" />
+                    </span>
                     AI Match Analysis
                 </span>
                 <h1 className="text-4xl font-medium tracking-tight text-white">Replayd</h1>
@@ -52,26 +55,27 @@ export default function MatchForm({ onSubmit, onSelectSample, error }: MatchForm
             <h1 className="text-lg font-medium text-white/90">Cached Matches</h1>
             <div className="w-full max-w-md flex flex-col gap-1 max-h-[280px] mb-1 overflow-y-auto">
                 {samples.map((sample) => (
-                        <div
-                            key={sample.matchId}
-                            className="flex items-center justify-between gap-4 p-4 rounded-md bg-[var(--bg-card)] border border-[var(--border)] shadow-md"
-                            >
-                            <div className="flex flex-col gap-1.5">
-                                <div className="flex items-center gap-3">
-                                    <h2 className="text-base font-medium text-[var(--text-primary)]">{sample.player.summonerName} : {sample.player.champion}</h2>
-                                    <span
-                                        className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${sample.player.win
-                                                ? 'bg-green-500/10 text-green-600 dark:text-green-400'
-                                                : 'bg-red-500/10 text-red-600 dark:text-red-400'
-                                            }`}
-                                    >
-                                        {sample.player.win ? 'Win' : 'Loss'}
-                                    </span>
-                                </div>
-                                <p className="text-sm text-[var(--text-muted)]">
-                                    {sample.player.kills} / {sample.player.deaths} / {sample.player.assists} KDA
-                                </p>
+                    <div
+                        key={sample.matchId}
+                        className="flex items-center justify-between gap-4 py-2 px-4 rounded-md bg-[var(--bg-card)] border border-[var(--border)] shadow-md"
+                    >
+                        <div className="flex flex-col gap-1.5">
+                            <div className="flex items-center gap-3">
+                                <h2 className="text-base font-medium text-[var(--text-primary)]">{sample.player.summonerName} : {sample.player.champion}</h2>
                             </div>
+                            <p className="text-sm text-[var(--text-muted)]">
+                                {sample.player.kills} / {sample.player.deaths} / {sample.player.assists} KDA
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span
+                                className={`px-2.5 py-0.5 rounded-full text-xs font-medium text-right ${sample.player.win
+                                    ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+                                    : 'bg-red-500/10 text-red-600 dark:text-red-400'
+                                    }`}
+                            >
+                                {sample.player.win ? 'Win' : 'Loss'}
+                            </span>
                             <button
                                 onClick={() => onSelectSample(sample.matchId)}
                                 className="shrink-0 px-5 py-2 rounded-full bg-[var(--text-primary)] text-[var(--bg-page)] text-sm font-medium hover:opacity-85 transition-opacity"
@@ -79,7 +83,8 @@ export default function MatchForm({ onSubmit, onSelectSample, error }: MatchForm
                                 Analyze
                             </button>
                         </div>
-                    ))}
+                    </div>
+                ))}
             </div>
             <div className="w-full max-w-md flex flex-col gap-3 p-8 rounded-md bg-[var(--bg-card)] border border-[var(--border)] shadow-md">
                 <input

@@ -26,7 +26,7 @@ export default function RootLayout({
     >
       <body className={`${inter.variable} ${spaceGrotesk.variable} min-h-full flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="system">
-          <div className="fixed top-4 right-4 z-50"> {/* maybe remove this in the future or find a better way to keep it with the hero background */}
+          <div className="fixed top-4 right-4 z-50 bg-[var(--bg-card)] border border-[var(--border)] shadow-md px-2 pt-2 rounded-md"> {/* maybe remove this in the future or find a better way to keep it with the hero background */}
             <ThemeToggle />
           </div>
           {children}
