@@ -9,10 +9,11 @@ const inputStyles = "w-full px-4 py-2.5 border border-[var(--border)] rounded-sm
 interface MatchFormProps {
     onSubmit: (gameName: string, tagLine: string, region: string) => void
     onSelectSample: (matchId: string) => void
+    isLoading: boolean
     error: string | null
 }
 
-export default function MatchForm({ onSubmit, onSelectSample, error }: MatchFormProps) {
+export default function MatchForm({ onSubmit, onSelectSample, isLoading, error }: MatchFormProps) {
     const [gameName, setGameName] = useState('')
     const [tagLine, setTagLine] = useState('')
     const [region, setRegion] = useState('NA')
@@ -112,6 +113,7 @@ export default function MatchForm({ onSubmit, onSelectSample, error }: MatchForm
                     <p className="text-red-500 text-sm text-center">{validationError || error}</p>
                 )}
                 <motion.button
+                    disabled={isLoading}
                     className="w-full mt-2 px-4 py-2.5 rounded-full bg-[var(--text-primary)] text-[var(--bg-page)] text-sm font-medium hover:opacity-80 transition-opacity"
                     whileTap={{ scale: 0.95 }}
                     type="button" onClick={handleSubmit}
@@ -121,7 +123,7 @@ export default function MatchForm({ onSubmit, onSelectSample, error }: MatchForm
                     }}
                     transition={{ duration: 0.25 }}
                 >
-                    Find Matches
+                    {isLoading ? 'Finding Matches...' : 'Find Matches'}
                 </motion.button>
             </div>
         </HeroBackground>

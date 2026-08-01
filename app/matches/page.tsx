@@ -1,9 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
-import Report from '@/components/Report'
 import { MatchPreview } from '@/lib/trimmer'
 import { useRouter } from 'next/navigation'
-import { PlayerSummary } from '@/lib/trimmer'
 import MatchList from '@/components/MatchList'
 import { useSearchParams } from 'next/navigation'
 
@@ -24,11 +22,10 @@ export default function MatchesPage() {
     const [matchPreviews, setMatchPreviews] = useState<MatchPreview[] | null>(null)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
-    const [messageIndex, setMessageIndex] = useState(0)
 
 
     async function getMatchPreviews() {
-        if (!playerInfo) return
+        if (!playerInfo?.gameName || !playerInfo?.tagLine || !playerInfo?.region) return
         try {
             setIsLoading(true)
             const response = await fetch('/api/matches', {
@@ -57,6 +54,7 @@ export default function MatchesPage() {
 
     return (
         <main className="min-h-screen bg-[var(--bg-page)]">
+            {error && !isLoading && !matchPreviews && <p className="text-[var(--text-muted)] bg-[var(--bg-page)]">{error}</p>}
             {!isLoading && matchPreviews && <MatchList matchPreviews= {matchPreviews} onSelect={handleSelectMatch} onBack={router.back} error={error} />}
             {isLoading && (
                 <div className="flex flex-col items-center justify-center h-screen gap-4 bg-[var(--bg-page)]">

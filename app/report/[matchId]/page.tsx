@@ -38,6 +38,7 @@ export default function ReportPage() {
     async function getResult() {
         try {
             setIsLoading(true)
+            setError(null)
             const response = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -57,6 +58,7 @@ export default function ReportPage() {
     async function getSampleResult() {
         try {
             setIsLoading(true)
+            setError(null)
             const response = await fetch('/api/samples/' + matchId)
             const data = await response.json()
             if (!response.ok) throw new Error(data.error || 'Something went wrong')
@@ -93,6 +95,7 @@ export default function ReportPage() {
 
     return (
         <main className="min-h-screen bg-[var(--bg-page)]">
+            {error && !isLoading && !result && <p className="text-[var(--text-muted)] bg-[var(--bg-page)]">{error}</p>}
             {result && <Report matchId={result.matchId} player={result.player} report={result.report} onBack={router.back} />}
             {isLoading && (
                 <div className="flex flex-col items-center justify-center h-screen gap-4 bg-[var(--bg-page)]">
