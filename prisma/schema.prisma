@@ -18,10 +18,11 @@ model TestPing {
 }
 
 model Report {
-  matchId   String  @id
+  matchId   String
+  puuid     String
   gameName  String
   player    Json
   report    String
   createdAt DateTime @default(now())
-
+  @@id([matchId, puuid])
 }

@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
         const existingMatch = await db.report.findUnique({
             where: {
                 matchId: targetMatchId,
-                gameName: gameName,
+                puuid,
             },
         })
 
@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
         await db.report.create({
             data: {
                 matchId: targetMatchId,
+                puuid,
                 gameName: gameName,
                 player: JSON.parse(JSON.stringify(summary.targetPlayer)),
                 report: report,
