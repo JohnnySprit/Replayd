@@ -4,8 +4,9 @@ import { MatchPreview } from '@/lib/trimmer'
 import { useRouter } from 'next/navigation'
 import MatchList from '@/components/MatchList'
 import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
-export default function MatchesPage() {
+function MatchesContent() {
 
     const router = useRouter()
     const [playerInfo, setPlayerInfo] = useState<{ gameName: string, tagLine: string, region: string } | null>(null)
@@ -55,7 +56,7 @@ export default function MatchesPage() {
     return (
         <main className="min-h-screen bg-[var(--bg-page)]">
             {error && !isLoading && !matchPreviews && <p className="text-[var(--text-muted)] bg-[var(--bg-page)]">{error}</p>}
-            {!isLoading && matchPreviews && <MatchList matchPreviews= {matchPreviews} onSelect={handleSelectMatch} onBack={router.back} error={error} />}
+            {!isLoading && matchPreviews && <MatchList matchPreviews={matchPreviews} onSelect={handleSelectMatch} onBack={router.back} error={error} />}
             {isLoading && (
                 <div className="flex flex-col items-center justify-center h-screen gap-4 bg-[var(--bg-page)]">
                     <div className="w-10 h-10 border-4 border-[var(--border)] border-t-[var(--accent)] rounded-full animate-spin bg-[var(--bg-page)]" />
@@ -63,5 +64,20 @@ export default function MatchesPage() {
                 </div>
             )}
         </main>
+    )
+}
+
+
+export default function MatchesPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="flex items-center justify-center h-screen">
+                    <div className="w-10 h-10 border-4 border-[var(--border)] border-t-[var(--accent)] rounded-full animate-spin" />
+                </div>
+            }
+        >
+            <MatchesContent />
+        </Suspense>
     )
 }

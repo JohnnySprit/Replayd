@@ -6,9 +6,11 @@ import { PlayerSummary } from '@/lib/trimmer'
 import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
 
-export default function ReportPage() {
+
+function ReportContent() {
     const router = useRouter()
     const [error, setError] = useState<string | null>(null)
 
@@ -104,5 +106,19 @@ export default function ReportPage() {
                 </div>
             )}
         </main>
+    )
+}
+
+export default function ReportPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="flex items-center justify-center h-screen">
+                    <div className="w-10 h-10 border-4 border-[var(--border)] border-t-[var(--accent)] rounded-full animate-spin" />
+                </div>
+            }
+        >
+            <ReportContent />
+        </Suspense>
     )
 }
