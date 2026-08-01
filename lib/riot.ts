@@ -37,7 +37,7 @@ export async function getPuuid(gameName: string, tagLine: string, region: string
     return data.puuid
 }
 
-export async function getRecentMatchIds(puuid: string, region: string, count = 5): Promise<string[]> {
+export async function getRecentMatchIds(puuid: string, region: string, count = 10): Promise<string[]> {
     const regionBase = getRegionalBase(region)
     const res = await fetch(
         `${regionBase}/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=${count}&api_key=${process.env.RIOT_API_KEY}`

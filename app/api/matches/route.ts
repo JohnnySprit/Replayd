@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
         // step 1: get puuid from riot id
         const puuid = await getPuuid(gameName, tagLine, region)
 
-        // step 2: get all recent match ids (5) for the user to select from
+        // step 2: get all recent match ids (10) for the user to select from
         const matchIds = await getRecentMatchIds(puuid, region)
 
         const matchPreviews: MatchPreview[] = []
